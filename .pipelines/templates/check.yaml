@@ -20,7 +20,12 @@ stages:
       matrix: $[ stageDependencies.detect.detect.outputs['plan.changedModules'] ]
     steps:
     - checkout: self
-    
+
+    - task: TerraformInstaller@1
+      displayName: 'Terraform installation'
+      inputs:
+        terraformVersion: 'latest'
+        
     - pwsh: |
         terraform -chdir="./$(module)" fmt -write=false -diff -check
       displayName: terraform fmt 📄
