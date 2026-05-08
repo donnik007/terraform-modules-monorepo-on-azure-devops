@@ -31,8 +31,17 @@ stages:
       displayName: terraform fmt 📄
 
     - pwsh: |
-        terraform -chdir="./$(module)" init --backend=false
-        terraform validate
+        try {
+          git config --global http.https://dev.azure.com/.extraheader "AUTHORIZATION: bearer $env:SYSTEM_ACCESSTOKEN"
+          terraform -chdir="./$(module)" init --backend=false
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          terraform -chdir="./$(module)" validate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        } finally {
+          git config --global --unset http.https://dev.azure.com/.extraheader 2>$null
+        }
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
       displayName: terraform validate ✅
 
   - job: checkov
