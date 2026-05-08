@@ -21,8 +21,8 @@ stages:
         $message = "($date) PR #$(pullRequestId) - $(pullRequestTitle)"
         $description = "- $(changelogEntry)"
 
-        git config --global user.email "build@sdncenter.pl"
-        git config --global user.name "Project Collection Build Service (sdncenterspzoo)"
+        git config --global user.email "build@mycompany.com"
+        git config --global user.name "Project Collection Build Service (orgname)"
 
         $payload.releases | ForEach-Object {
             $branchName = "tmp_$($_.module)_$($_.new)"
